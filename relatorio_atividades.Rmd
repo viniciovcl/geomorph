@@ -1,0 +1,102 @@
+---
+title: "Atividades_Drenagem"
+author: "VCL"
+date: "August 29, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Teste 
+
+Parâmetros do terreno  SAGA V.2.2.3
+
+```{r, warning=FALSE}
+#setwd("c:/geom")
+list.files (pattern = '^.*\\.asc$') #listando todos os arquivos .asc
+```
+
+```{r, warning=FALSE}
+
+
+TP.list <- list.files(getwd(), pattern= '^.*\\.asc$', full.names = TRUE) #arquivos de extens?o asc
+TP.list <- TP.list [-9]     #Retirando o Flow Direction
+TP.list
+
+```
+
+
+
+
+```{r}
+grids5m <- raster::stack(TP.list)
+class(grids5m)
+summary (grids5m)
+
+
+```
+
+## **Resumo dos dados**
+
+
+Parâmetros SAGA:
+
+Dataset               | Descrição                        |  Método                          | Unidade
+----------------------|----------------------------------|----------------------------------|---------
+"aspect.asc"          | Aspecto                          | Evans, 1979 (2nd order polynom)  | Radians
+"baselev.asc"         | Elevaçãoo do nível de base       | ta_channels SAGA V2.2.3^*^       | m
+"c_area.asc"          | Área de contribuição  dwonslope  | Freeman 1994 (multiple direction)| m^2^               
+"c_long.asc"          | Curvatura longitudinal           | Evans, 1979 (2nd order polynom)  | Normalized
+"c_tan.asc"           | Curvatura Tangencial             | Evans, 1979 (2nd order polynom)  | Normalized          
+"dem.asc"             | Modelo digital de elevação       | Hutchinson, 1996 (ANUDEM)        | m
+"slope.asc"           | Declividade                      | Evans 1979 (2nd order polynom)   | Radians
+"grad_downslp.asc"    | Gradient downslope distance      | Hjerdt et.al, 2004               | degree
+"grad_downslp_dif.asc"| (grad_downslp.asc - slope.asc)   | Hjerdt et.al, 2004               | degree
+"hofd.asc"            | Horizontal overland flow distance| Nobre, 2011 (Nearest Drainage)   | m 
+"ofdcn.asc"           | Overland flow distance to channel| Nobre, 2011 (Nearest Drainage)   | m
+"vdcn.asc"            | Vertical distance to channel     | ta_channels SAGA V2.2.3^*^       | m
+"vofd.asc"            | Vertical overland flow distance  | Nobre, 2011 (Nearest Drainage)   | m
+
+
+**^*^**: This module calculates the vertical distance to a channel network base level. The algorithm consists of two major steps: 1. Interpolation of a channel network base level elevation 2. Subtraction of this base level from the original elevations. Author: O.Conrad (c) 2002
+
+
+```{r,eval= TRUE, echo= FALSE, message=FALSE, warning=FALSE}
+#### # Filtrando Data set 
+
+hist.grids <- raster::stack(grids5m[[- c(3,4,5,6)]])
+log.grids <-  raster::stack(grids5m[[c(3,4,5,6)]])# Exibir em base logarítima
+```
+
+
+```{r,eval= TRUE, echo= FALSE, message=FALSE, warning=FALSE}
+#### Histogramas 
+library(raster)
+
+hist(hist.grids, breaks=25, col="grey25", na.rm=TRUE)
+#hist(log.grids, breaks=25, col="grey25")
+
+```
+
+```{r,eval= TRUE, echo= FALSE, message=FALSE, warning=FALSE}
+#### Base log 
+hist(log(log.grids), breaks=25, col="grey25")
+
+```
+
+
+## Including Plots
+
+Plot Raster object:
+
+```{r}
+
+plot(grids5m[[9]], main ="Gradient Doownslope difference 2")
+
+
+
+```
+
+
