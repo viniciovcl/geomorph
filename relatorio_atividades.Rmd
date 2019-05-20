@@ -1,8 +1,9 @@
 ---
-title: "Atividades_Drenagem"
+title: "Geomophological units"
 author: "VCL"
 date: "August 29, 2018"
-output: html_document
+output: html_document:
+  keep_md: true
 ---
 
 ```{r setup, include=FALSE}
@@ -93,7 +94,7 @@ Plot Raster object:
 
 ```{r}
 
-plot(grids5m[[9]], main ="Gradient Doownslope difference 2")
+plot(grids5m[[9]], main ="Gradient Doownslope difference ")
 
 
 
